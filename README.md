@@ -1,5 +1,7 @@
 # Aurae — AI Resume Analyzer
 
+![Project Preview](preview.png)
+
 A full-stack SaaS product built with **React + Vite**, **FastAPI**, **Firebase Auth**, and **Claude AI**.
 
 ---
