@@ -12,7 +12,7 @@ A full-stack SaaS product built with **React + Vite**, **FastAPI**, **Firebase A
 |-----------|-----------------------------------------|
 | Frontend  | React 18, Vite, React Router v6         |
 | Backend   | FastAPI, Python 3.11+, pdfplumber       |
-| AI        | Anthropic Claude (claude-opus-4-5)      |
+| AI        | Google Gemini(gemini-2.5-flash)         |
 | Auth      | Firebase Authentication                 |
 | Deploy    | Vercel (frontend) + Railway (backend)   |
 
@@ -37,7 +37,7 @@ aurae/
     ├── main.py             # FastAPI app + CORS
     ├── routes/analyze.py   # POST /api/analyze, /api/analyze/text
     ├── services/
-    │   ├── analyzer.py     # Claude API integration
+    │   ├── analyzer.py     # Gemini API integration
     │   ├── parser.py       # pdfplumber PDF extraction
     │   └── auth.py         # Firebase Admin token verification
     ├── models/schemas.py   # Pydantic request/response models
@@ -78,11 +78,10 @@ uvicorn main:app --reload   # runs on http://localhost:8000
 4. Project Settings → Your Apps → Add Web App → copy config to `frontend/.env`
 5. Project Settings → Service Accounts → Generate New Private Key → save as `backend/firebase_credentials.json`
 
-### 4. Anthropic API key
+### 4. Gemini API key
 
-1. Go to [console.anthropic.com](https://console.anthropic.com)
-2. Create an API key → paste into `backend/.env` as `ANTHROPIC_API_KEY`
-
+1. Go to [Google AI Studio](https://aistudio.google.com/)
+2. Create an API key → paste into `backend/.env` as `GEMINI_API_KEY`
 ---
 
 ## Deployment
@@ -132,7 +131,7 @@ VITE_API_URL=http://localhost:8000/api
 
 ### Backend (`backend/.env`)
 ```
-ANTHROPIC_API_KEY=
+GEMINI_API_KEY=
 FIREBASE_CREDENTIALS_PATH=firebase_credentials.json
 PORT=8000
 ALLOWED_ORIGINS=http://localhost:5173,https://your-app.vercel.app
