@@ -1,45 +1,50 @@
 import os
 import json
-import re
-from groq import Groq
+from google import genai
 from dotenv import load_dotenv
 
 load_dotenv()
 
-_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+_client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
-PROMPT_TEMPLATE = """You are an expert resume analyst. Analyze this resume{jd_context} and return ONLY valid JSON, no markdown, no extra text:
+# Braces inside the Schema are now escaped (doubled)
+PROMPT_TEMPLATE = """You are an expert resume analyst. Analyze the provided resume{jd_context}.
+Return ONLY a valid JSON object following this schema. Do not include markdown or explanations.
 
-{{"overallScore":78,"atsScore":82,"sections":{{"Contact":90,"Summary":75,"Experience":80,"Skills":85,"Education":90}},"strengths":["strength 1","strength 2","strength 3"],"improvements":["improvement 1","improvement 2","improvement 3","improvement 4"],"keywords":["keyword1","keyword2","keyword3","keyword4","keyword5"],"missingKeywords":["missing1","missing2","missing3"],"summary":"2 sentence overall assessment of the resume."}}
+Schema:
+{{
+  "overallScore": "integer 0-100",
+  "atsScore": "integer 0-100",
+  "sections": {{"Contact": 0, "Summary": 0, "Experience": 0, "Skills": 0, "Education": 0}},
+  "strengths": ["string"],
+  "improvements": ["string"],
+  "keywords": ["string"],
+  "missingKeywords": ["string"],
+  "summary": "string"
+}}
 
-Resume:
+Resume Content:
 {resume_text}
 
 {jd_section}"""
-
 
 def analyze_resume(resume_text: str, job_description: str = "") -> dict:
     jd_context = " against the provided job description" if job_description else ""
     jd_section = f"Job Description:\n{job_description}" if job_description else ""
 
+    # Python will now correctly replace {jd_context}, {resume_text}, and {jd_section}
+    # while ignoring the escaped {{ }} braces in the schema.
     prompt = PROMPT_TEMPLATE.format(
         jd_context=jd_context,
         resume_text=resume_text[:4000],
         jd_section=jd_section,
     )
 
-    response = _client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        messages=[
-            {"role": "system", "content": "You are an expert resume analyst. Always respond with valid JSON only."},
-            {"role": "user", "content": prompt},
-        ],
-        max_tokens=1024,
-        temperature=0.3,
+    # Force the model to output strict JSON
+    response = _client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=prompt,
+        config={"response_mime_type": "application/json"}
     )
-
-    raw = response.choices[0].message.content.strip()
-    raw = re.sub(r"^```[a-z]*\n?", "", raw)
-    raw = re.sub(r"\n?```$", "", raw)
-
-    return json.loads(raw)
+    
+    return json.loads(response.text)
