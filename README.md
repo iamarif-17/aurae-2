@@ -100,7 +100,7 @@ npm run build
 ```bash
 # Push backend/ folder to a separate GitHub repo (or monorepo)
 # Connect on railway.app → new project → Deploy from GitHub
-# Add env vars: ANTHROPIC_API_KEY, FIREBASE_CREDENTIALS_PATH, ALLOWED_ORIGINS
+# Add env vars: GEMINI_API_KEY, FIREBASE_CREDENTIALS_PATH, ALLOWED_ORIGINS
 # Upload firebase_credentials.json as a Railway secret file
 ```
 
