@@ -29,7 +29,7 @@ const features = [
     ),
     bg: '#f5efd0',
     title: 'AI Suggestions',
-    desc: 'Get personalized, actionable improvements powered by Claude AI in seconds.',
+    desc: 'Get personalized, actionable improvements powered by Gemini AI in seconds.',
   },
   {
     icon: (

@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import toast, { Toaster } from 'react-hot-toast';
 
 const plans = [
   {
@@ -32,7 +33,7 @@ const plans = [
     ],
     cta: 'Start Free Trial',
     ctaStyle: 'btn-p',
-    action: 'upload',
+    action: 'signup',
   },
   {
     name: 'Team',
@@ -49,15 +50,30 @@ const plans = [
     ],
     cta: 'Contact Sales',
     ctaStyle: 'btn-s',
-    action: null,
+    action: 'contact',
   },
 ];
 
 export default function Pricing() {
   const navigate = useNavigate();
 
+  const handleAction = (plan) => {
+    if (plan.action === 'contact') {
+      window.open("mailto:arifalipstr1916@gmail.com?subject=Team Plan Inquiry", '_blank');
+    } else if (plan.action === 'signup') {
+      localStorage.setItem('aurae_selected_plan', plan.name);
+      toast.success(`${plan.name} plan selected! Redirecting...`, { position: 'bottom-center' });
+      setTimeout(() => navigate('/auth'), 1500);
+    } else if (plan.action === 'upload') {
+      localStorage.setItem('aurae_selected_plan', plan.name);
+      toast.success(`${plan.name} plan activated! Redirecting...`, { position: 'bottom-center' });
+      setTimeout(() => navigate('/upload'), 1500);
+    }
+  };
+
   return (
     <div className="page" style={{ padding: '56px 36px 72px', maxWidth: 1040, margin: '0 auto' }}>
+      <Toaster />
       <h2 style={{
         fontFamily: "'DM Serif Display', Georgia, serif",
         fontSize: 'clamp(40px, 6vw, 56px)',
@@ -127,11 +143,11 @@ export default function Pricing() {
 
             <button
               className={plan.ctaStyle}
-              onClick={() => plan.action && navigate(`/${plan.action}`)}
+              onClick={() => handleAction(plan)}
               style={{
                 width: '100%', marginTop: 22,
                 padding: 13, borderRadius: 12,
-                fontSize: 14, textAlign: 'center',
+                fontSize: 14, textAlign: 'center', cursor: 'pointer',
                 ...(plan.ctaStyle === 'btn-s'
                   ? { background: 'transparent', border: '1.5px solid rgba(26,37,53,.22)', borderRadius: 12 }
                   : {}),
@@ -143,13 +159,12 @@ export default function Pricing() {
         ))}
       </div>
 
-      {/* FAQ teaser */}
       <div style={{ textAlign: 'center', marginTop: 52 }}>
         <p style={{ color: 'var(--mid)', fontSize: 14 }}>
           Questions? Check our{' '}
           <a href="#" style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>FAQ</a>
           {' '}or{' '}
-          <a href="mailto:hello@aurae.app" style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>
+          <a href="mailto:arifalipstr1916@gmail.com" style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>
             email us
           </a>.
         </p>

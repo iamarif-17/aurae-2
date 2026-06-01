@@ -12,7 +12,7 @@ A full-stack SaaS product built with **React + Vite**, **FastAPI**, **Firebase A
 |-----------|-----------------------------------------|
 | Frontend  | React 18, Vite, React Router v6         |
 | Backend   | FastAPI, Python 3.11+, pdfplumber       |
-| AI        | Google Gemini(gemini-2.5-flash)         |
+| AI        | Gemini (gemini 2.5-flash).              |
 | Auth      | Firebase Authentication                 |
 | Deploy    | Vercel (frontend) + Railway (backend)   |
 
@@ -80,8 +80,9 @@ uvicorn main:app --reload   # runs on http://localhost:8000
 
 ### 4. Gemini API key
 
-1. Go to [Google AI Studio](https://aistudio.google.com/)
+1. Go to [Google AI Studio](https://aistudio.google.com/app/apikey)
 2. Create an API key → paste into `backend/.env` as `GEMINI_API_KEY`
+
 ---
 
 ## Deployment

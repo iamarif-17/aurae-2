@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { analyzeFile, analyzeText } from '../lib/api';
+import toast, { Toaster } from 'react-hot-toast'; // 1. Add this
 
 export default function Upload() {
   const navigate    = useNavigate();
@@ -15,7 +16,6 @@ export default function Upload() {
   const handleFile = useCallback((f) => {
     if (!f) return;
     setFile(f);
-    // Also read as text so user can see/edit it
     const reader = new FileReader();
     reader.onload = (e) => setText(e.target.result);
     reader.readAsText(f);
@@ -29,8 +29,19 @@ export default function Upload() {
 
   const handleAnalyze = async () => {
     if (!text.trim() && !file) return;
+
+    // 2. Logic: Enforce 10-analysis limit for Free users
+    const plan = localStorage.getItem('aurae_selected_plan') || 'Free';
+    const count = parseInt(localStorage.getItem('aurae_analysis_count') || '0', 10);
+
+    if (plan === 'Free' && count >= 10) {
+      toast.error("Limit reached! Upgrade to Pro for unlimited analyses.", { position: 'bottom-center' });
+      return; 
+    }
+
     setError('');
     setLoading(true);
+
     try {
       let result;
       if (file) {
@@ -38,6 +49,11 @@ export default function Upload() {
       } else {
         result = await analyzeText(text, jd);
       }
+      
+      // 3. Logic: Increment attempt counter on success
+      localStorage.setItem('aurae_analysis_count', (count + 1).toString());
+      toast.success(`Analysis ${count + 1} of 10 complete!`, { position: 'bottom-center' });
+
       navigate('/results', { state: { analysis: result } });
     } catch (err) {
       console.error(err);
@@ -62,6 +78,7 @@ export default function Upload() {
       display: 'flex', alignItems: 'center',
       justifyContent: 'center', padding: '36px 24px',
     }}>
+      <Toaster /> {/* 4. Add the Toaster component here */}
       <div className="card" style={{ maxWidth: 640, width: '100%', padding: '44px' }}>
 
         <h2 style={{
@@ -75,7 +92,6 @@ export default function Upload() {
           Paste your resume text or drop a file — we'll handle the rest
         </p>
 
-        {/* Drop zone */}
         <div
           onClick={() => fileRef.current.click()}
           onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
@@ -119,7 +135,6 @@ export default function Upload() {
           />
         </div>
 
-        {/* Divider */}
         <div style={{ position: 'relative', textAlign: 'center', margin: '16px 0' }}>
           <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: 1, background: 'rgba(0,0,0,.08)' }} />
           <span style={{
