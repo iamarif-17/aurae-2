@@ -8,7 +8,7 @@ const plans = [
     period: '/month',
     dot: '#dff5e0',
     features: [
-      '3 analyses / month',
+      '10 analyses / month',
       'Basic ATS score',
       'Section breakdown',
       'Email support',
