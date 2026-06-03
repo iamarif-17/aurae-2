@@ -14,7 +14,7 @@ A full-stack SaaS product built with **React + Vite**, **FastAPI**, **Firebase A
 | Backend   | FastAPI, Python 3.11+, pdfplumber       |
 | AI        | Gemini (gemini 2.5-flash).              |
 | Auth      | Firebase Authentication                 |
-| Deploy    | Vercel (frontend) + Railway (backend)   |
+| Deploy    | Vercel (frontend) + Render(backend)     |
 
 ---
 
@@ -42,7 +42,7 @@ aurae/
     │   └── auth.py         # Firebase Admin token verification
     ├── models/schemas.py   # Pydantic request/response models
     ├── requirements.txt
-    ├── Procfile            # Railway deploy
+    ├── Procfile            # Render deploy
     └── .env.example
 ```
 
@@ -99,11 +99,14 @@ npm run build
 ### Backend → Railway
 
 ```bash
-# Push backend/ folder to a separate GitHub repo (or monorepo)
-# Connect on railway.app → new project → Deploy from GitHub
+# Backend → Render
+# Push backend/ folder to monorepo (already in aurae-2)
+# Connect on render.com → New Web Service → Deploy from GitHub
+# Root Directory: backend
+# Build Command: pip install -r requirements.txt
+# Start Command: uvicorn main:app --host 0.0.0.0 --port 8000
 # Add env vars: GEMINI_API_KEY, FIREBASE_CREDENTIALS_PATH, ALLOWED_ORIGINS
-# Upload firebase_credentials.json as a Railway secret file
-```
+# Upload firebase_credentials.json as a Render environment variable
 
 ---
 
