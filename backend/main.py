@@ -31,6 +31,6 @@ app.add_middleware(
 app.include_router(analyze_router, prefix="/api")
 
 
-@app.get("/api/health")
+@app.api_route("/api/health", methods=["GET", "HEAD"])
 def health():
     return {"status": "ok", "service": "aurae-api"}
